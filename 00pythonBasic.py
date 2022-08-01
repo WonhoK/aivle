@@ -1,5 +1,5 @@
 #1
-l = list(range(7,100,7))
+l = list(range(7,101,7))
 print(l)
 print()
 

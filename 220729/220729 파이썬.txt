@@ -1,0 +1,324 @@
+*** 미니실습 1***
+
+def min_of(a):
+    min = a[0]
+    for i in range(1, len(a)):
+        if min > a[i]: min = a[i]
+    return min
+
+t = (4, 7, 5.6, 2, 3.14, 1)
+s = 'string'
+a = ['DTS', 'AAS', 'FLAC']
+
+print(min_of(t))
+print(min_of(s))
+print(min_of(a))
+
+
+
+*** 미니실습 2 ***
+
+print('리스트를 역순으로 출력합니다')
+num = int(input('원소 수를 입력하세요.:'))
+x = [None]*num
+for i in range(num):
+    x[i] = int(input(f'x[{i}]값을 입력하세요.:'))
+
+print('리스트를 역순으로 출력합니다')
+for i in range(num):
+    print(f'x[{i}] = {x[num - i - 1]}')
+
+
+
+*** 미니실습3 ***
+
+def seq_search_sentinel(b, key):
+    a = b.copy()
+    a.append(key)
+
+    i = 0
+    count = 0
+    while True:
+        count += 1
+        if a[i] == key:
+            break
+        i += 1
+
+    count += 1
+    if i == len(b):
+        return count
+    else: return count
+
+
+def seq_search(a, key):
+    i = 0
+    count = 0
+    while True:
+        count += 1
+        if i == len(a):
+            return count
+        count += 1
+        if a[i] == key:
+            return count
+        i += 1
+
+
+a = [2, 5, 1, 3, 9, 6, 7]
+print(f'While문 사용하는 경우 조건문 실행 횟수 : {seq_search(a, 7)}')
+print(f'보초법 사용하는 경우 조건문 실행 횟수 : {seq_search_sentinel(a, 7)}')
+
+
+
+*** 실습 1 ***
+
+def check_prime(num):
+    result = True
+    for i in range(2, num):
+        if num % i == 0:
+            result = False
+            break
+    return result
+
+
+x = [2]
+for i in range(3, 1001):
+    if check_prime(i): x.append(i)
+
+for i in range(len(x)):
+    print(f'{x[i]} ', end = "")
+
+
+
+*** 실습 2 ***
+
+idx = 0
+x = []
+print('종료하려면 "End" 를 입력하세요')
+while True:
+    temp = input(f'x[{idx}]를 입력하세요.: ')
+    if temp == 'End': break
+    x.append(int(temp))
+    idx += 1
+
+print('리스트를 역순으로 정렬하여 출력합니다')
+for i in range(len(x)):
+    print(f'x[{i}] = {x[len(x) - i - 1]}')
+
+
+
+*** 실습 3 ***
+
+idx = 0
+x = []
+print('배열의 입력을 종료하려면 "End" 를 입력하세요')
+while True:
+    temp = input(f'x[{idx}]를 입력하세요.: ')
+    if temp == 'End': break
+    x.append(int(temp))
+    idx += 1
+
+target = int(input('검색값을 입력하세요.: '))
+check = False
+result = 0
+for i in range(len(x)):
+    if x[i] == target:
+        check = True
+        result = i
+        break;
+
+if check: print(f'검색값({target})의 인덱스는 {result}입니다.')
+else: print(f'검색값({target})이 리스트에 존재하지 않습니다.')
+
+
+
+*** 실습 4 ***
+
+idx = 0
+x = []
+print('배열의 입력을 종료하려면 "End" 를 입력하세요')
+while True:
+    temp = input(f'x[{idx}]를 입력하세요.: ')
+    if temp == 'End': break
+    x.append(int(temp))
+    idx += 1
+
+
+min = x[0]
+max = x[0]
+minIdx = 0
+maxIdx = 0
+
+for i in range(1, len(x)):
+    if x[i] < min:
+        min = x[i]
+        minIdx = i
+    if x[i] > max:
+        max = x[i]
+        maxIdx = i
+
+
+print(f'최솟값({min})의 인덱스는 {minIdx}입니다.')
+print(f'최댓값({max})의 인덱스는 {maxIdx}입니다.')
+
+
+
+*** 추가실습 Q0 ***
+
+N, X = map(int, input().split())
+data = list(map(int, input().split()))
+for i in range(N):
+    if data[i] < int(X): print(f'{data[i]} ', end = "")
+
+
+
+*** 추가실습 Q1 ***
+
+def solution(lottos, win_nums):
+    count = 0
+    zero = 0
+    for i in range(6) :
+        if lottos[i] == 0:
+            zero +=1
+            continue
+        for j in range(6):
+            if lottos[i] == win_nums[j]:
+                count += 1
+                break
+
+
+    best = 7 - count - zero
+    worst = 7 - count
+    if best > 6: best = 6
+    if worst > 6: worst = 6
+    answer = [best, worst]
+
+    return answer
+
+lottos = [45, 4, 35, 20, 3, 9]
+win_nums = [20, 9, 3, 45, 4, 35]
+answer = solution(lottos, win_nums)
+print(answer)
+
+
+
+*** 추가실습 Q2 ***
+
+def solution(numbers):
+    answer = 45
+    for i in range(len(numbers)):
+        answer -= numbers[i]
+    return answer
+
+numbers = [1,2,3,4,6,7,8,0]
+answer = solution(numbers)
+print(answer)
+
+
+
+*** 추가실습 Q3 ***
+
+def bin_search(a, key):
+    pl = 0
+    pr = len(a) - 1
+
+    while True:
+        pc = (pl + pr) // 2
+        if a[pc] > key:
+            pr = pc - 1
+        elif a[pc] < key:
+            pl = pc + 1
+        else: return pc
+
+        if pl > pr: break
+    return -1
+
+def solution(store, customer):
+    answer = ['no'] * len(customer)
+    for i in range(len(customer)):
+        temp = bin_search(store, customer[i])
+        if temp != -1: answer[i] = 'yes'
+    return answer
+
+store = [1,2,3,7,8]
+customer = [1,5,8,4,6]
+answer = solution(store, customer)
+print(answer)
+
+
+
+*** 추가실습 Q4 ***
+
+def solution(arr):
+    maximum = 0
+    multiple = 1
+    for i in arr:
+        if maximum < i: maximum = i
+        multiple *= i
+
+    answer = multiple
+    for i in range(maximum, multiple + 1):
+        check = True
+        for j in arr:
+            if (i % j) != 0:
+                check = False
+                break
+        if check:
+            answer = i
+            break
+
+    return answer
+
+arr = [2,6,8,14]
+answer = solution(arr)
+print(answer)
+
+
+
+*** 추가실습 Q5 ***
+
+def solution(n, s):
+    if s == 1: return [-1]
+    if s % 2 == 0: return [s // 2, s // 2]
+    else: return [s // 2, s // 2 + 1]
+
+n = 2
+s = 9
+answer = solution(n, s)
+print(answer)
+
+
+
+*** 추가실습 Q6 ***
+
+def solution(arr):
+    if len(arr) == 1: return -1
+    minimum = arr[0]
+    idx = 0;
+    for i in range(len(arr)):
+        if arr[i] < minimum:
+            minimum = arr[i]
+            idx = i
+
+    arr.pop(idx)
+    return arr
+
+arr = [4, 3, 2, 1]
+answer = solution(arr)
+print(answer)
+
+
+
+*** 추가실습 Q7 ***
+
+def solution(arr):
+    answer = []
+    temp = -1
+    for i in arr:
+        if i == temp: continue
+        temp = i
+        answer.append(i)
+    return answer
+
+arr = [1,1,3,3,0,1,1]
+answer = solution(arr)
+print(answer)
