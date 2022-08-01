@@ -11,7 +11,7 @@ print(l[7])
 print()
 
 #3
-print(l[len(l) - 3])
+print(l[-3])
 print()
 
 #4
@@ -24,7 +24,7 @@ print(sum(l)/len(l))
 print()
 
 #6
-for i in range(1, 101):
+for i in range(2, 101):
     check = True
     for j in range(2, i):
         if i % j == 0:
