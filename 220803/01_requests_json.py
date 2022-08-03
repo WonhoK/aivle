@@ -52,14 +52,16 @@ def stock_price(pagesize, page, code='KOSPI'):
     data = response.json()
     return pd.DataFrame(data)[["localTradedAt", "closePrice"]]
 print()
-print(stock_price(30, 2))
+kospi = stock_price(60, 1)
+print(kospi)
 
 # KOSDAQ 데이터 수집 코드 작성
 url = "https://m.stock.naver.com/api/index/KOSDAQ/price?pageSize=10&page=1"
 response = requests.get(url)
 data = response.json()
 df = pd.DataFrame(data)[["localTradedAt", "closePrice"]]
-print(stock_price(30, 1, "KOSDAQ"))
+kosdaq = stock_price(60, 1, "KOSDAQ")
+print(kosdaq)
 
 
 ### 참고 : docstring
@@ -76,9 +78,10 @@ def exchangeRate(pagesize, page, code="USD"):
     url = f"https://api.stock.naver.com/marketindex/exchange/FX_{code}KRW/prices?page={page}&pageSize={pagesize}"
     response = requests.get(url)
     data = response.json()
-    return pd.DataFrame(data)[['localTradedAt', 'closePrice']]
+    return pd.DataFrame(data)[["localTradedAt", "closePrice"]]
 
-print(exchangeRate(60, 1, 'JPY'))
+usd = exchangeRate(60, 1)
+print(usd)
 
 # url --------------> json(str) ----------> list ---------------> dataframe
 #       request.get               .json()          .DataFrame()
@@ -91,3 +94,53 @@ print(exchangeRate(60, 1, 'JPY'))
 # 피어슨 상관계수
 # 1과 가까울수록 강한 양의 상관관계
 # -1과 가까울수록 강한 음의 상관관계
+# 0과 가까울수록 관계가 없다
+
+# 데이터 전처리 과정
+df = kospi.copy()
+df["kosdaq"] = kosdaq["closePrice"]
+df["usd"] = usd["closePrice"]
+df = df.rename(columns={"closePrice" : "kospi"})
+# 칼럼 데이터 변경 (str > int) : apply
+# df[columns].apply() : 모든 데이터를 함수에 대입한 결과를 출력
+df["kospi"] = df["kospi"].apply(lambda data: float(data.replace(",","")))
+df["kosdaq"] = df["kosdaq"].apply(lambda data: float(data.replace(",","")))
+df["usd"] = df["usd"].apply(lambda data: float(data.replace(",","")))
+# 피어슨 상관계수 출력
+print(df[['kospi', 'kosdaq', 'usd']].corr())
+
+
+
+### copy apply, lambda
+# copy
+data1 = [1, 2, 3]
+data2 = data1         # 얕은복사(주소) : call by reference
+data3 = data1.copy()  # 깊은복사(값) : call by value
+print(data1, data2, data3)
+data1[1] = 4
+print(data1, data2, data3) # data2 [1, 2, 3]이 아닌 [1, 4, 3]이 나옴
+
+#apply : 모든 데이터를 func 적용시킨 결과 출력
+df = pd.DataFrame(
+    [{"age" : 23}, {"age" : 36}, {"age" : 27}]
+)
+print(df)
+def change_ages(age):
+    return age // 10 * 10
+df["ages"] = df["age"].apply(change_ages)
+print(df)
+
+# lambda : 일회성 함수
+# 사용 이유 : 간단한 함수(파라미터를 받아서 바로 리턴)를 메모리를 절약하여 사용
+def plus(n1, n2):
+    return n1 + n2
+
+def minus(n1, n2):
+    return n1 - n2
+
+def calc(func, n1, n2):
+    return func(n1, n2)
+
+# 동일한 결과
+print(calc(plus, 1, 2), calc(minus, 1, 2))
+print(calc(lambda n1, n2 : n1 + n2, 1, 2), calc(lambda n1, n2 : n1 - n2, 1, 2))
