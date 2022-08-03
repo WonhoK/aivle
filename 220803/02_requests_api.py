@@ -28,7 +28,30 @@ headers = {
 # json.dumps() : 인터넷 트래픽에서는 영문, 숫자, 특수문자만 사용가능
 #                한글과 같은 문자를 인코딩해주는 함수(영문, 숫자, 특수문자로)
 response = requests.post(url, json.dumps(params), headers=headers)
-print(response.text)
 
 # 4. JSON(str) > list, dict > DataFrame
-print(response.json()["message"]["result"]["translatedText"])
+response.json()["message"]["result"]["translatedText"]
+
+# 5. 함수로 작성
+def translate(txt):
+    url = "https://openapi.naver.com/v1/papago/n2mt"
+    params = {"source": "ko", "target": "en", "text": txt}
+    headers = {
+        "Content-Type": "application/json",
+        "X-Naver-Client-Id": CLIENT_ID,
+        "X-Naver-Client-Secret": CLIENT_SECRET
+    }
+    response = requests.post(url, json.dumps(params), headers=headers)
+    txt_en = response.json()["message"]["result"]["translatedText"]
+    return txt_en
+
+txt = "웹 크롤링은 재미있습니다"
+txt_en = translate(txt)
+print(txt_en)
+
+# excel을 불러와서 excel로 저장
+covid = pd.read_excel("covid.xlsx")[["category", "title"]]
+covid_en = covid["title"].apply(translate)
+covid["title_en"] = covid_en
+print(covid)
+covid.to_excel("covid_en.xlsx",index=False,encoding="utf-8-sig")
